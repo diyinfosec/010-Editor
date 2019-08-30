@@ -1,0 +1,69 @@
+//------------------------------------------------
+//--- 010 Editor v9.0.2 Script File
+//
+//      File: ReverseFileEndianness.1sc
+//   Authors: Ramprasad Ramshankar
+//   Version: 1.0
+//   Purpose: To reverse the byte order (endianness) of a file in 010 editor. 
+//  Category: Binary
+//   History: 
+//   1.0    Initial Release
+//------------------------------------------------
+
+/*
+    References: 
+    Sample script used: https://www.sweetscape.com/010editor/repository/files/NibblesReverse.1sc
+    List of data types: https://www.sweetscape.com/010editor/manual/DataTypes.htm
+    List of interface functions:
+        You need these functions to interact with the 010 editor
+        https://www.sweetscape.com/010editor/manual/FuncInterface.htm
+        Interface functions used here: GetFileNum(), FileNew(), FileSelect()
+    List of I/O functions:
+        You need these functions to process data from the files. 
+        https://www.sweetscape.com/010editor/manual/FuncIO.htm
+        I/O functions used here: ReadByte(), WriteByte()
+*/
+
+/*
+	Files in 010 editor will have integer file handles. 
+	cur_file will store the handle to the currently opened file. 
+	new_file will store the handle to the newly opened file. 
+*/
+int cur_file,new_file;
+
+// Variables to store file size.
+int cur_file_size, new_file_size;
+
+// Temporary variable to store a single byte. 
+UBYTE byte_var;
+
+/*
+	Obtaining file handles. 
+	Handle to the currently open file can simply be obtained through GetFileNum()
+	The output file is a new file and the handle is obtained through FileNew(content_type). The content_type can be Hex, Text or Unicode.
+*/
+cur_file = GetFileNum();
+new_file = FileNew("Hex");
+
+// To work with a file, we need to select the it using the FileSelect(file_handle)
+FileSelect(cur_file);
+// Obtaining size of the curent file. 
+cur_file_size=FileSize()-1;
+
+//Printf("File cur_file_size is %d",cur_file_size);
+
+
+while(cur_file_size>=0)
+{
+	// Reading contents of the current file one byte at a time starting from the last byte. 
+    FileSelect(cur_file);
+	byte_var = ReadByte(cur_file_size);
+
+	// Writing the byte value to the new file starting from the first byte (effectively reversing the file)
+	FileSelect(new_file);
+	WriteByte(new_file_size, byte_var);
+
+	// Counters, so that we know when to get out of the while loop. 
+    cur_file_size--;
+    new_file_size++;
+}
