@@ -1,0 +1,33 @@
+//------------------------------------------------
+//--- 010 Editor v10.0 Binary Template
+//
+//      File: ntfs_efs_fek.bt
+//   Authors: Ramprasad R
+//   Version: 1.0
+//   Purpose: To parse a decrypted FEK (File Encryption Key) blob 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+// 14-Dec-2019 - Initial version
+// References: 
+// https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-efsr
+//------------------------------------------------
+
+
+typedef struct FEK (int len){
+    FSkip(len);
+};
+
+
+typedef enum <uint32>  {
+    CALG_AES_256=0x6610,
+    CALG_3DES=0x6603
+}AlgorithmId;
+
+LittleEndian();
+uint32 key_length <name="Key Length", comment="Length of the FEK in bytes">;
+uint32 key_entropy <name="Key Entropy", comment="The number of bits of true randomness in the FEK.">;
+AlgorithmId key_algorithm <name="Encryption Algorithm", comment="The symmetric cryptographic algorithm associated with the FEK", format=hex>;
+int reserved <name="Reserved",comment="Not used">;
+FEK f(key_length) <name="File Encryption Key (FEK)">;
