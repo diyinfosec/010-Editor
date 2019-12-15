@@ -1,0 +1,113 @@
+//------------------------------------------------
+//--- 010 Editor v10.0 Binary Template
+//
+//      File: windows_cert_blob.bt
+//   Authors: Ramprasad R
+//   Version: 1.0
+//   Purpose: To parse Windows certificate blob structures. 
+//  Category: Windows
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+// 15-Dec-2019     1.0     Original Version
+
+/*
+ References:
+Overview of the cert blobs:
+https://www.namecoin.org/2017/05/27/reverse-engineering-cryptoapi-cert-blobs.html
+https://itsme.home.xs4all.nl/projects/xda/smartphone-certificates.html
+
+To get a list of certificate property names and their description:
+https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetcertificatecontextproperty
+
+To get the property ID corresponding to the property name:
+https://github.com/wine-mirror/wine/blob/master/include/wincrypt.h#L2426
+*/
+
+//------------------------------------------------
+
+string get_property_name(DWORD prop_id)
+{
+    string out_str="";
+
+    switch(prop_id)
+    {
+        case 1 : out_str="CERT_KEY_PROV_HANDLE_PROP_ID"; break;
+        case 2 : out_str="CERT_KEY_PROV_INFO_PROP_ID"; break;
+        case 3 : out_str="CERT_SHA1_HASH_PROP_ID"; break;
+        case 4 : out_str="CERT_MD5_HASH_PROP_ID"; break;
+        case 5 : out_str="CERT_KEY_CONTEXT_PROP_ID"; break;
+        case 6 : out_str="CERT_KEY_SPEC_PROP_ID"; break;
+        case 7 : out_str="CERT_IE30_RESERVED_PROP_ID"; break;
+        case 8 : out_str="CERT_PUBKEY_HASH_RESERVED_PROP_ID"; break;
+        case 9 : out_str="CERT_ENHKEY_USAGE_PROP_ID"; break;
+        case 10 : out_str="CERT_NEXT_UPDATE_LOCATION_PROP_ID"; break;
+        case 11 : out_str="CERT_FRIENDLY_NAME_PROP_ID"; break;
+        case 12 : out_str="CERT_PVK_FILE_PROP_ID"; break;
+        case 13 : out_str="CERT_DESCRIPTION_PROP_ID"; break;
+        case 14 : out_str="CERT_ACCESS_STATE_PROP_ID"; break;
+        case 15 : out_str="CERT_SIGNATURE_HASH_PROP_ID"; break;
+        case 16 : out_str="CERT_SMART_CARD_DATA_PROP_ID"; break;
+        case 17 : out_str="CERT_EFS_PROP_ID"; break;
+        case 18 : out_str="CERT_FORTEZZA_DATA_PROP_ID"; break;
+        case 19 : out_str="CERT_ARCHIVED_PROP_ID"; break;
+        case 20 : out_str="CERT_KEY_IDENTIFIER_PROP_ID"; break;
+        case 21 : out_str="CERT_AUTO_ENROLL_PROP_ID"; break;
+        case 22 : out_str="CERT_PUBKEY_ALG_PARA_PROP_ID"; break;
+        case 23 : out_str="CERT_CROSS_CERT_DIST_POINTS_PROP_ID"; break;
+        case 24 : out_str="CERT_ISSUER_PUBLIC_KEY_MD5_HASH_PROP_ID"; break;
+        case 25 : out_str="CERT_SUBJECT_PUBLIC_KEY_MD5_HASH_PROP_ID"; break;
+        case 26 : out_str="CERT_ENROLLMENT_PROP_ID"; break;
+        case 27 : out_str="CERT_DATE_STAMP_PROP_ID"; break;
+        case 28 : out_str="CERT_ISSUER_SERIAL_NUMBER_MD5_HASH_PROP_ID"; break;
+        case 29 : out_str="CERT_SUBJECT_NAME_MD5_HASH_PROP_ID"; break;
+        case 30 : out_str="CERT_EXTENDED_ERROR_INFO_PROP_ID"; break;
+
+        //Hazy definitions
+        case 32 : out_str="The CERTIFICATE"; break;
+        case 32 : out_str="The CERTIFICATE REVOCATION LIST"; break;
+        case 33 : out_str="The CERTIFICATE TRUST LIST"; break;
+        //End of Hazy definitions
+
+        case 64 : out_str="CERT_RENEWAL_PROP_ID"; break;
+        case 65 : out_str="CERT_ARCHIVED_KEY_HASH_PROP_ID"; break;
+        case 66 : out_str="CERT_AUTO_ENROLL_RETRY_PROP_ID"; break;
+        case 67 : out_str="CERT_AIA_URL_RETRIEVED_PROP_ID"; break;
+        case 68 : out_str="CERT_AUTHORITY_INFO_ACCESS_PROP_ID"; break;
+        case 69 : out_str="CERT_BACKED_UP_PROP_ID"; break;
+        case 70 : out_str="CERT_OCSP_RESPONSE_PROP_ID"; break;
+        case 71 : out_str="CERT_REQUEST_ORIGINATOR_PROP_ID"; break;
+        case 72 : out_str="CERT_SOURCE_LOCATION_PROP_ID"; break;
+        case 73 : out_str="CERT_SOURCE_URL_PROP_ID"; break;
+        case 74 : out_str="CERT_NEW_KEY_PROP_ID"; break;
+        case 75 : out_str="CERT_OCSP_CACHE_PREFIX_PROP_ID"; break;
+        case 76 : out_str="CERT_SMART_CARD_ROOT_INFO_PROP_ID"; break;
+        case 77 : out_str="CERT_NO_AUTO_EXPIRE_CHECK_PROP_ID"; break;
+        case 78 : out_str="CERT_NCRYPT_KEY_HANDLE_PROP_ID"; break;
+        case 79 : out_str="CERT_HCRYPTPROV_OR_NCRYPT_KEY_HANDLE_PROP_ID"; break;
+        case 80 : out_str="CERT_SUBJECT_INFO_ACCESS_PROP_ID"; break;
+        case 81 : out_str="CERT_CA_OCSP_AUTHORITY_INFO_ACCESS_PROP_ID"; break;
+        case 82 : out_str="CERT_CA_DISABLE_CRL_PROP_ID"; break;
+        case 83 : out_str="CERT_ROOT_PROGRAM_CERT_POLICIES_PROP_ID"; break;
+        case 84 : out_str="CERT_ROOT_PROGRAM_NAME_CONSTRAINTS_PROP_ID"; break;
+        case 85 : out_str="CERT_FIRST_RESERVED_PROP_ID"; break;
+        default: out_str="Unknown Property ID"; break;
+        //Printf( "unknown property ID %d at location = %d\n", prop_id, FTell() ); 
+    }
+    return out_str;
+}
+
+typedef struct property_data (int len)
+{
+    FSkip(len);
+};
+
+LittleEndian();
+
+while(!FEof())
+{
+    DWORD prop_id <name="Property ID",read=get_property_name>;
+    DWORD unknown <name="Unknown", hidden=true>;
+    DWORD prop_size <name="Size (in bytes)">;
+    property_data p1(prop_size) <name="Property Data">;
+}
