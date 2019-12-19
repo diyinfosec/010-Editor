@@ -1,0 +1,43 @@
+//----------------------------------------------------------------------------------------------
+//--- 010 Editor v10.0 Binary Template
+//
+//   File: GUID.bt
+//   Version: 1.0
+//   Purpose: To parse the GUID structure. 
+//   Author: Ramprasad R
+//   Category: DPAPI
+//   History: 
+//   1.0    19-Dec-2019  First modified from original template by Jean-Michel Picod
+//   References:
+//   https://msdn.microsoft.com/en-us/ie/aa373931(v=vs.94)
+//----------------------------------------------------------------------------------------------
+
+#ifndef __GUID__
+#define __GUID__
+
+LittleEndian();
+
+typedef struct {
+    DWORD   Data1 <name="Data1", format=hex, comment="Specifies the first 8 hexadecimal digits of the GUID.">;
+    WORD    Data2 <name="Data2", format=hex, comment="Specifies the first group of 4 hexadecimal digits.">;
+    WORD    Data3 <name="Data3", format=hex, comment="Specifies the second group of 4 hexadecimal digits.">;
+    UBYTE    Data4[8] <name="Data4", format=hex, comment="Third group= The first 2 bytes, fourth group=remaining 6 bytes">
+">;
+} GUID <read=readGUID,write=writeGUID>;
+
+string readGUID(GUID &g) {
+    string s;
+   SPrintf(s, "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x", g.Data1,
+            g.Data2, g.Data3, g.Data4[0], g.Data4[1], g.Data4[2],
+            g.Data4[3], g.Data4[4], g.Data4[5], g.Data4[6], g.Data4[7]);
+    return s;
+}
+
+void writeGUID(GUID &g, string s) {
+    SScanf(s, "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x", g.Data1,
+            g.Data2, g.Data3, g.Data4[0], g.Data4[1], g.Data4[2],
+            g.Data4[3], g.Data4[4], g.Data4[5], g.Data4[6], g.Data4[7]);    
+}
+
+
+#endif
