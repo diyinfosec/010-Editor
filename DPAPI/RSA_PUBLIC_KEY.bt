@@ -1,0 +1,44 @@
+  
+//---------------------------------------------------------------------------------------------------------------------
+//--- 010 Editor v10.0 Binary Template
+//
+//   File: RSA_PUBLIC_KEY.bt
+//   Version: 1.0
+//   Purpose: To parse the RSA_PUBLIC_KEY structure in Windows. 
+//   Author: Ramprasad R
+//   Category: DPAPI
+//   History: 
+//   1.0    19-Dec-2019  Original Version
+//   References:
+//   https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpbcgr/fe93545c-772a-4ade-9d02-ad1e0d81b6af
+//---------------------------------------------------------------------------------------------------------------------
+
+#ifndef __RSA_PUBLIC_KEY__
+#define __RSA_PUBLIC_KEY__
+
+typedef struct ModulusValue (int len) {
+FSkip(len-8);
+char padding[8] <name="Padding", open=suppress, comment="Eight bytes of 0 padding">;
+};
+
+string readMagic(uint32 i)
+{
+    if(i==0x31415352)
+        return "RSA1";
+    else
+        return "Invalid Magic value";
+}
+
+typedef struct RSAPublicKey {
+    uint32  magic <name="Magic value", format=hex, comment="Sentinel value, should be RSA1", read=readMagic>;
+    uint32  keylen <name="Modulus size (bytes)", comment="Size of the modulus field (includes 8 byte padding)">;
+    uint32  bitlen <name="Modulus size (bits)", comment="Does not include padding">;
+    uint32  datalen <name="Max DATA size (bytes)",comment="Max bytes that can be encoded using the Public Key">;
+    uint32  pubExp <name="Public Exponent value">;
+    ModulusValue m1(keylen) <name="Modulus Value">;
+};
+
+LittleEndian();
+RSAPublicKey p1 <name="RSA Public Key">;
+
+#endif
