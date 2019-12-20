@@ -21,8 +21,7 @@ typedef struct {
     DWORD   Data1 <name="Data1", format=hex, comment="Specifies the first 8 hexadecimal digits of the GUID.">;
     WORD    Data2 <name="Data2", format=hex, comment="Specifies the first group of 4 hexadecimal digits.">;
     WORD    Data3 <name="Data3", format=hex, comment="Specifies the second group of 4 hexadecimal digits.">;
-    UBYTE    Data4[8] <name="Data4", format=hex, comment="Third group= The first 2 bytes, fourth group=remaining 6 bytes">
-">;
+    UBYTE    Data4[8] <name="Data4", format=hex, comment="Third group= The first 2 bytes, fourth group=remaining 6 bytes">;
 } GUID <read=readGUID,write=writeGUID>;
 
 string readGUID(GUID &g) {
