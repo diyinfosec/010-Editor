@@ -1,0 +1,48 @@
+//--------------------------------------------------------------------------------------------------
+//--- 010 Editor v10.0 Binary Template
+//
+//      File: SID.bt
+//   Authors: Ramprasad R   
+//   Version: 1.0
+//   Purpose: To parse the Windows SID structure. 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History:
+//              22-Dec-2019   1.0     Original Version
+// References: 
+// Raymond Chen's Article: https://devblogs.microsoft.com/oldnewthing/20040315-00/?p=40253
+// Andrea Fortuna Blog: https://www.andreafortuna.org/2017/10/23/windows-security-identifiers-sids/
+//-------------------------------------------------------------------------------------------------
+
+
+typedef struct SID {
+    LittleEndian();
+    byte sid_revision;
+    byte num_dashes;
+
+    BigEndian();
+    byte security_nt_authority[6];
+    
+    LittleEndian();
+    local int i;
+    
+    for(i=1;i<num_dashes;i++)
+        uint32 machine_identifier;
+    
+    uint32 user_identifier;
+};
+
+string read_sid(SID &s)
+{
+    string ret_str;    
+    SPrintf(ret_str,"S-%x-%x-",s.sid_revision,s.security_nt_authority[5]);
+    local int j;
+    for (j=0;j<s.num_dashes-1;j++)
+        SPrintf(ret_str,"%s%u-",ret_str,s.machine_identifier[j]);
+    SPrintf(ret_str,"%s%u",ret_str,s.user_identifier);
+    return ret_str;
+}
+
+
+SID s1 <read=read_sid>;
