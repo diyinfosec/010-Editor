@@ -5,6 +5,7 @@
 //   Authors: Ramprasad R
 //   Version: 1.0
 //   Purpose: To parse Windows certificate blob structures. 
+// These blob structures are usually found in certificate files under : C:\Users\<Username>\AppData\Roaming\Microsoft\SystemCertificates
 //  Category: Windows
 // File Mask: 
 //  ID Bytes: 
