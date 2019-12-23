@@ -1,7 +1,7 @@
 //------------------------------------------------
 //--- 010 Editor v10.0 Binary Template
 //
-//      File: windows_cert_blob.bt
+//      File: WINDOWS_CERTIFICATE_BLOB.bt
 //   Authors: Ramprasad R
 //   Version: 1.0
 //   Purpose: To parse Windows certificate blob structures. 
