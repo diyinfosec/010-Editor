@@ -1,7 +1,7 @@
 //------------------------------------------------
 //--- 010 Editor v10.0 Binary Template
 //
-//      File: ntfs_efs_fek.bt
+//      File: EFS_DECRYPTED_FEK.bt
 //   Authors: Ramprasad R
 //   Version: 1.0
 //   Purpose: To parse a decrypted FEK (File Encryption Key) blob 
