@@ -1,0 +1,56 @@
+/// NOTE: This is Linear Directory entries (entries stored one after the other)
+// EXT4 also has Hash Tree Directories. That will have to be a separate template: https://www.infradead.org/~mchehab/rst_conversion/filesystems/ext4/dynamic.html#linear-classic-directories
+
+typedef struct {
+    typedef struct
+    {
+        int32 inode_num;
+        int16 entry_length;
+        byte name_len;
+        byte file_type;
+        char file_name[name_len];
+        char padding[entry_length-4-2-1-1-name_len];
+    } directory_entry;
+    
+    local int32 i;
+    
+    
+    while (1)
+    {
+          //directory_entry d;
+          i=ReadInt(FTell());
+          Printf("%d \n",i);
+          if(i==0)
+           break;
+          else
+            directory_entry d;
+        
+    }
+    
+    
+    typedef struct
+    {
+        int32 reserved; //Must be all 0s.
+        int16 rec_len; //Must be 12 or hex 0x0C
+        byte file_len; //Must be 0
+        byte file_type; //Must be 0
+        int32 leaf_block_checksum; //To be calculated. 
+        
+        /*
+        Ref: https://www.infradead.org/~mchehab/rst_conversion/filesystems/ext4/dynamic.html#linear-classic-directories
+        The leaf directory block checksum is calculated against the 
+        FS UUID, 
+        the directory’s inode number, 
+        the directory’s inode generation number, 
+        and the entire directory entry block up to (but not including) the fake directory entry.
+        */
+    
+    } checksum_directory_entry;
+    
+    checksum_directory_entry c;
+    Printf("End of directory entries.\n");
+} directory_entry_block;
+
+//directory_entry_block f;
+
+
